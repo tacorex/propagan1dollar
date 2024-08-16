@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página con Marco de Logos</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        #marco {
+            width: 1000px; /* Ajusta el tamaño según tus necesidades */
+            height: 10000px; /* Ajusta el tamaño según tus necesidades */
+            border: 5px solid #333;
+            overflow: hidden;
+            position: relative;
+            background-color: #fff;
+        }
+
+        .logo {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+        }
+
+        input[type="file"] {
+            margin: 20px;
+            display: none; /* Oculto por defecto */
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <input type="password" id="passwordInput" placeholder="Enter Password">
+    <button id="submitPassword">Submit Password</button>
+    <input type="file" id="fileInput" accept="image/*" disabled>
+    <div id="marco"></div>
+
+    <script>
+        const correctPassword = "skibidi007";
+
+        document.getElementById('submitPassword').addEventListener('click', function() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === correctPassword) {
+                alert("Password correct! You can now upload a file.");
+                document.getElementById('fileInput').disabled = false;
+                document.getElementById('fileInput').style.display = 'block'; // Mostrar input file
+            } else {
+                alert("Incorrect password. Try again.");
+            }
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const files = event.target.files;
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.className = 'logo';
+
+                    img.onload = function() {
+                        // Obtener dimensiones del marco
+                        const marco = document.getElementById('marco');
+                        const marcoWidth = marco.offsetWidth;
+                        const marcoHeight = marco.offsetHeight;
+
+                        // Calcular posición aleatoria dentro del marco
+                        const posX = Math.random() * (marcoWidth - 1);
+                        const posY = Math.random() * (marcoHeight - 1);
+
+                        img.style.left = `${posX}px`;
+                        img.style.top = `${posY}px`;
+                        img.width = 1;  // Redimensionar a 1x1 píxel
+                        img.height = 1;
+
+                        // Añadir la imagen al marco
+                        marco.appendChild(img);
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
